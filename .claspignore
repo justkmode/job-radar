@@ -1,0 +1,6 @@
+# Push ONLY the Apps Script files. Everything else (CLAUDE.md, .claude/, .git/) stays local.
+**/**
+!appsscript.json
+!*.js
+!*.gs
+!*.html
