@@ -5,11 +5,17 @@
  */
 
 // ---- Settings: change these, not the logic below ----
-// Gmail search: only the "Job alerts" label, last 14 days, only the two job senders.
+// The job senders: only emails from these addresses count. Add a new sender here.
+const JOB_SENDERS = [
+  'jobalerts-noreply@linkedin.com',
+  'jobs-noreply@linkedin.com',
+];
+// Gmail search: only the "Job alerts" label, last 14 days, only the senders above.
 // A label with a space is written with a dash in a search: "Job alerts" -> job-alerts
+// The senders are joined with OR: (from:a OR from:b)
 const SEARCH_QUERY =
   'label:job-alerts newer_than:14d ' +
-  '(from:jobalerts-noreply@linkedin.com OR from:jobs-noreply@linkedin.com)';
+  '(' + JOB_SENDERS.map(sender => `from:${sender}`).join(' OR ') + ')';
 const SHEET_NAME = 'Radar';       // the tab the rows go into
 const MAX_BODY_CHARS = 3000;      // keep each email text short and readable
 
