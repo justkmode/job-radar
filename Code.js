@@ -1,14 +1,23 @@
 /**
- * Job Radar: copies LinkedIn job alert emails into this Google Sheet.
+ * Job Radar: copies job alert emails (LinkedIn, NNE, The Hub, Emply, SOLID.Jobs) into this Google Sheet.
+ * Job links are cleaned up for LinkedIn only (yet); other senders keep their email text in column D.
  * Runs inside your own Google account. Nothing is sent anywhere else.
  * Claude reads the sheet later through the Google Drive connector.
  */
 
 // ---- Settings: change these, not the logic below ----
 // The job senders: only emails from these addresses count. Add a new sender here.
+// This script runs as a separate AGENT MAILBOX (its own Google account), which only receives
+// emails that the filters in the main Gmail forward. Those filters are the security
+// boundary: Emply and SOLID.Jobs are only forwarded when they are job alerts, so
+// personal application or rejection emails never reach this mailbox or this sheet.
 const JOB_SENDERS = [
-  'jobalerts-noreply@linkedin.com',
-  'jobs-noreply@linkedin.com',
+  'jobalerts-noreply@linkedin.com',  // LinkedIn job alerts
+  'jobs-noreply@linkedin.com',       // LinkedIn job recommendations
+  'job-alert@nne.recruitmail.com',   // NNE job alerts
+  'noreply@thehub.io',               // The Hub (startup jobs)
+  'noreply@emply.com',               // Emply "jobagent" (e.g. Metroselskabet), only alerts are forwarded
+  'rekrutacje@solid.jobs',           // SOLID.Jobs (Poland), only "Job Alert" emails are forwarded
 ];
 // Gmail search: only the "Job alerts" label, last 14 days, only the senders above.
 // A label with a space is written with a dash in a search: "Job alerts" -> job-alerts
